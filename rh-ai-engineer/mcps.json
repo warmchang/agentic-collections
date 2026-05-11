@@ -27,13 +27,12 @@
     "ai-observability": {
       "type": "http",
       "url": "${AI_OBSERVABILITY_MCP_URL}/mcp",
-      "env": { "AI_OBSERVABILITY_MCP_URL": "${AI_OBSERVABILITY_MCP_URL}" },
       "description": "AI Observability MCP server for vLLM model performance analysis, GPU monitoring, OpenShift metrics, and distributed tracing. Deployed on-cluster from quay.io/ecosystem-appeng/aiobs-mcp-server. See: https://github.com/rh-ai-quickstart/ai-observability-summarizer",
       "security": { "isolation": "remote", "network": "cluster", "credentials": "env-only" }
     },
     "rhoai": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/opendatahub-io/rhoai-mcp", "rhoai-mcp"],
+      "args": ["--from", "git+https://github.com/opendatahub-io/rhoai-mcp@31576c61b6f59280704c86dde1e3e9ed79def5e5", "rhoai-mcp"],
       "env": {
         "RHOAI_MCP_KUBECONFIG_PATH": "${KUBECONFIG}",
         "RHOAI_MCP_TRANSPORT": "stdio"
