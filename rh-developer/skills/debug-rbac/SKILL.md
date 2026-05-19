@@ -14,7 +14,7 @@ description: |
 model: inherit
 color: cyan
 license: Apache-2.0
-allowed-tools: resources_get resources_list events_list pods_list pods_list_in_namespace pods_log
+allowed-tools: resources_get resources_list events_list pods_list pods_log
 metadata:
   user_invocable: "true"
 ---
@@ -406,7 +406,7 @@ oc get pods -n <namespace> -l app=<app-label> -o wide
 ### Related Documentation
 
 - [OpenShift RBAC documentation](https://docs.openshift.com/container-platform/latest/authentication/using-rbac.html)
-- [Kubernaut RBAC failure golden transcript](https://github.com/jordigilh/kubernaut-demo-scenarios/blob/feature/v1.4-new-scenarios/golden-transcripts/rbac-failure-rbacpolicydenied.json)
+- [Kubernaut RBAC failure golden transcript](https://github.com/jordigilh/kubernaut-demo-scenarios/blob/d3447fce75e51e4486ebb5e73dbe2ad9ecf552bf/golden-transcripts/rbac-failure-rbacpolicydenied.json)
 
 ---
 

@@ -14,7 +14,7 @@ description: |
 model: inherit
 color: cyan
 license: Apache-2.0
-allowed-tools: resources_get resources_list events_list pods_list pods_list_in_namespace
+allowed-tools: resources_get resources_list events_list pods_list
 metadata:
   user_invocable: "true"
 ---
@@ -416,7 +416,7 @@ oc rollout undo deployment/<deployment-name> -n <namespace>
 ### Related Documentation
 
 - [OpenShift SCC documentation](https://docs.openshift.com/container-platform/latest/authentication/managing-security-context-constraints.html)
-- [Kubernaut SCC violation golden transcript](https://github.com/jordigilh/kubernaut-demo-scenarios/blob/feature/v1.4-new-scenarios/golden-transcripts/scc-violation-sccviolationpodblocked.json)
+- [Kubernaut SCC violation golden transcript](https://github.com/jordigilh/kubernaut-demo-scenarios/blob/d3447fce75e51e4486ebb5e73dbe2ad9ecf552bf/golden-transcripts/scc-violation-sccviolationpodblocked.json)
 
 ---
 
