@@ -356,6 +356,8 @@ def validate_pack(pack: str, repo_root: Path, kubeconfig: str) -> ValidationResu
             continue
 
         print(f"    {len(tools)} tools available")
+        for t in sorted(tools):
+            print(f"      - {t}")
         all_available_tools.update(tools)
 
     if all_available_tools:
