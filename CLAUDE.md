@@ -68,7 +68,7 @@ The repository is registered in [Red Hat Compass](https://compass.redhat.com) (i
 |------|---------|-----------|-------|
 | **Location** | Index that references other manifest files | — | 6 (1 root + 4 packs + 1 mcps) |
 | **System** | Top-level grouping for the repository | — | 1 (`agentic-plugins`) |
-| **AiResource** | Skills and pack definitions | `plugin` (packs) / `skill` (skills) | 4 packs + 36 skills |
+| **AiResource** | Skills and pack definitions | `plugin` (packs) / `skill` (skills) | 4 packs + 37 skills |
 | **MCPServer** | MCP server configurations | `local` / `remote` | 3 |
 
 #### Location Hierarchy
@@ -78,7 +78,7 @@ Compass ingests a single root Location. Everything else is discovered through de
 ```
 catalog-info.yaml (root Location)
 ├── system.yaml                         → System: agentic-plugins
-├── ocp-admin/catalog-info.yaml         → Location → ocp-admin-plugin.yaml + 7 skills
+├── ocp-admin/catalog-info.yaml         → Location → ocp-admin-plugin.yaml + 8 skills
 ├── rh-sre/catalog-info.yaml            → Location → rh-sre-plugin.yaml + 13 skills
 ├── rh-virt/catalog-info.yaml           → Location → rh-virt-plugin.yaml + 10 skills
 ├── rh-basic/catalog-info.yaml          → Location → rh-basic-plugin.yaml + 6 skills
@@ -87,21 +87,9 @@ catalog-info.yaml (root Location)
 
 #### Entity Relationships
 
-All relationships use `dependsOn` / `dependencyOf`:
+Use `dependsOn` / `dependencyOf` for custom kinds (`AiResource`, `MCPServer`); do not use `partOf` / `hasPart` on those kinds. Compass does not auto-generate inverse relations (COMPASS-1288) — declare both sides on every edge.
 
-> **Why not `partOf`/`hasPart`?** Compass only processes `partOf`/`hasPart` for standard Backstage kinds (Component, API, Resource). Custom kinds like `AiResource` and `MCPServer` can store these fields in `spec`, but they are not processed into the relation graph. Only `dependsOn`/`dependencyOf` and `ownedBy`/`ownerOf` generate actual relations for custom kinds.
-
-Concrete relationships in this repo:
-
-- **Skill → Plugin**: `dependsOn` / `dependencyOf` (a skill belongs to its plugin)
-- **Plugin → System**: `spec.system` (generates `partOf` relation automatically; no explicit `dependsOn` to the system needed)
-- **MCPServer → System**: `dependsOn` / `dependencyOf` (an MCP server belongs to the system)
-- **Skill → MCPServer**: `dependsOn` / `dependencyOf` (a skill uses an MCP server)
-- **Plugin → MCPServer**: `dependsOn` / `dependencyOf` (a plugin uses an MCP server)
-- **Skill → Skill**: `dependsOn` / `dependencyOf` (orchestration skills invoke other skills)
-- **All entities → Group**: `spec.owner: group:redhat/ai5-marketplace`
-
-> **Bidirectional declaration policy:** Compass does not auto-generate inverse relations for custom entity kinds such as `AiResource` and `MCPServer` (tracked as COMPASS-1288). Until this is resolved upstream, we explicitly declare **both directions** of every relationship in our manifests. For example, if a skill declares `dependsOn: [airesource:rh-sre/rh-sre]`, the plugin must also declare `dependencyOf: [airesource:rh-sre/<skill>]`. When adding or modifying a relationship, always update both the source and target manifests.
+Full relationship matrix, bidirectional policy, entity ref formats, and file touch lists: [`.claude/skills/compass-manifest-maintenance/references/relationship-rules.md`](.claude/skills/compass-manifest-maintenance/references/relationship-rules.md). Use the **compass-manifest-maintenance** skill when adding or updating manifests. CI enforces structural rules via `scripts/validate_compass_manifests.py` (`make validate-compass-manifests`).
 
 #### Namespaces
 
@@ -115,7 +103,8 @@ All entities (skills, plugins, and MCP servers) share a single namespace: `ai5-m
 
 #### Adding Compass Manifests for a New Skill
 
-When adding a skill, create `skills/<skill-name>/catalog-info.yaml`:
+When adding a skill, create `skills/<skill-name>/catalog-info.yaml`. Set `spec.lifecycle` from the pack plugin (`<pack>/<pack>-plugin.yaml`); default to the plugin value and ask the user before changing it — a skill may match the plugin or use a **less mature** lifecycle only (never above the plugin). New packs default the plugin to `development`.
+
 ```yaml
 apiVersion: backstage.io/v1alpha1
 kind: AiResource
@@ -138,16 +127,13 @@ metadata:
       icon: github
 spec:
   type: skill
-  lifecycle: beta
+  lifecycle: <plugin-lifecycle>  # from <pack>-plugin.yaml; same or less mature than plugin
   owner: group:redhat/ai5-marketplace
   disciplines:
     - <discipline>
   categories:
     - <category>
-  agents:
-    - claude-code
-    - opencode
-    - cursor
+  agents: []
   dependsOn:
     - airesource:ai5-marketplace/<pack-name>
     # Add mcpserver and airesource (skill) dependencies as needed
@@ -304,8 +290,8 @@ last_updated: YYYY-MM-DD
    - Dependencies declaration
 4. Include concrete examples and complete error handling
 5. Update the pack's `AGENTS.md` intent routing table to include the new skill
-6. Create `skills/<skill-name>/catalog-info.yaml` Compass manifest (see "Adding Compass Manifests for a New Skill")
-7. Add the skill's `catalog-info.yaml` as a target in the pack's `catalog-info.yaml` Location
+6. Run **compass-manifest-maintenance** (`.claude/skills/compass-manifest-maintenance/`) to create or update Compass manifests — skill `catalog-info.yaml`, pack Location targets, plugin/MCP inverse `dependencyOf` (see "Adding Compass Manifests for a New Skill")
+7. Run `make validate-compass-manifests` (or full `make validate`)
 8. Test with `Skill` tool invocation
 9. Validate with `uv run python scripts/validate_skills_tier1.py <pack>/skills/<skill-name>/SKILL.md`
 
