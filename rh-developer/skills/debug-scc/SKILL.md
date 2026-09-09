@@ -39,7 +39,7 @@ Diagnose OpenShift SCC violations that block pod creation by analyzing security 
 
 ## Prerequisites
 
-**Required MCP Servers:** `openshift` ([setup](docs/prerequisites.md))
+**Required MCP Servers:** `openshift` ([setup](references/prerequisites.md))
 
 **Required MCP Tools:**
 - `resources_get` (from openshift) — Retrieve Deployment, ReplicaSet, and ServiceAccount details
@@ -60,7 +60,7 @@ When prerequisites fail:
 2. **Report error:**
    ```
    ❌ Cannot execute skill: MCP server `openshift` unavailable
-   📋 Setup: See docs/prerequisites.md for cluster access configuration
+   📋 Setup: See references/prerequisites.md for cluster access configuration
    ```
 3. **Request decision:** "How to proceed? (setup/skip/abort)"
 4. **Wait for user input**
@@ -435,7 +435,7 @@ Select an option:
 ## Dependencies
 
 ### Required MCP Servers
-- `openshift` — Kubernetes/OpenShift resource access for Deployments, ReplicaSets, Events, ServiceAccounts, and SecurityContextConstraints ([setup](docs/prerequisites.md))
+- `openshift` — Kubernetes/OpenShift resource access for Deployments, ReplicaSets, Events, ServiceAccounts, and SecurityContextConstraints ([setup](references/prerequisites.md))
 
 ### Required MCP Tools
 - `resources_get` (from openshift) — Retrieve individual resource details (Deployment, ReplicaSet, ServiceAccount)
@@ -448,7 +448,7 @@ Select an option:
 - `/debug-rbac` — If pods run but fail with 403 Forbidden API errors (RBAC, not SCC)
 
 ### Reference Documentation
-- **Internal:** [docs/debugging-patterns.md](docs/debugging-patterns.md) — Common error patterns and troubleshooting trees
+- **Internal:** [references/debugging-patterns.md](references/debugging-patterns.md) — Common error patterns and troubleshooting trees
 - **Official:** [Managing SCCs - OpenShift](https://docs.openshift.com/container-platform/latest/authentication/managing-security-context-constraints.html)
 
 ## Example Usage

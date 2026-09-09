@@ -9,7 +9,7 @@ help:
 	@echo "  validate-structure            - Structure, links, compliance, MCP tools (no per-skill tier checks)"
 	@echo "  validate-collection-schema    - Schema + roster + banners (subset of compliance)"
 	@echo "  validate-collection-compliance - Full .catalog compliance (includes collection.json drift)"
-	@echo "  validate-compass-manifests     - Compass catalog-info.yaml roster and bidirectional refs"
+	@echo "  validate-compass-manifests     - Compass manifests, roster, refs, and skill references/ layout"
 	@echo "  validate-skill-design         - Validate all skills (use PACK=rh-sre for a specific pack)"
 	@echo "  validate-skill-design-changed - Validate only changed skills (staged + unstaged, for local dev)"
 	@echo "  validate-mcp-tools            - Validate allowed-tools against live MCP servers (requires podman)"
@@ -56,6 +56,8 @@ validate: check-uv
 	uv run python scripts/validate_skill_doc_links.py || EXIT=1; \
 	echo "=== Validating docs tree links..."; \
 	uv run python scripts/validate_docs_tree_links.py || EXIT=1; \
+	echo "=== Running compass layout regression tests..."; \
+	uv run python scripts/test_validate_compass_layout.py || EXIT=1; \
 	echo "=== Validating collection compliance (.catalog/)..."; \
 	uv run python scripts/validate_collection_compliance.py || EXIT=1; \
 	echo "=== Validating Compass manifests..."; \
@@ -80,6 +82,8 @@ validate-structure: check-uv
 	uv run python scripts/validate_skill_doc_links.py || EXIT=1; \
 	echo "=== Validating docs tree links..."; \
 	uv run python scripts/validate_docs_tree_links.py || EXIT=1; \
+	echo "=== Running compass layout regression tests..."; \
+	uv run python scripts/test_validate_compass_layout.py || EXIT=1; \
 	echo "=== Validating collection compliance (.catalog/)..."; \
 	uv run python scripts/validate_collection_compliance.py || EXIT=1; \
 	echo "=== Validating Compass manifests..."; \
