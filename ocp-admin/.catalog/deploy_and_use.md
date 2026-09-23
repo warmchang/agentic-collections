@@ -63,7 +63,7 @@ export KUBECONFIG="/path/to/your/kubeconfig"
 
 ### Step 3: Use the skills
 
-The pack provides 7 skills. See the [ocp-admin README](../README.md) for the full list with descriptions and usage examples.
+The pack provides 8 skills. See the [ocp-admin README](../README.md) for the full list with descriptions and usage examples.
 
 ### Uninstall
 
