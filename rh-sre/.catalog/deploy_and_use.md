@@ -41,13 +41,15 @@ The pack uses three MCP servers that require credentials passed as environment v
 
 **For CVE discovery and remediation** (`lightspeed-mcp`):
 
-1. Create a Red Hat Lightspeed service account at [console.redhat.com](https://console.redhat.com/)
+1. Create a Red Hat Lightspeed service account ([setup guide](https://github.com/RedHatInsights/insights-mcp#service-account-setup))
 2. Export the credentials:
 
 ```bash
 export LIGHTSPEED_CLIENT_ID="<your-client-id>"
 export LIGHTSPEED_CLIENT_SECRET="<your-client-secret>"
 ```
+
+**Note:** A new service account has no permissions by default. An Organization Administrator must assign it RBAC roles — see the [setup guide](https://github.com/RedHatInsights/insights-mcp#service-account-setup). Without roles, skills return `403 Forbidden`.
 
 **For Ansible Automation Platform playbook execution** (optional — `aap-mcp-job-management`, `aap-mcp-inventory-management`):
 
